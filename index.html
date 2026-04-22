@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Poongothai Senthurkumar | Full Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #07090f;
+      --bg2: #0d1120;
+      --bg3: #121826;
+      --teal: #00d4aa;
+      --teal-dim: rgba(0,212,170,0.12);
+      --orange: #ff6e3a;
+      --text: #dde2f0;
+      --text-dim: #8892a4;
+      --border: rgba(255,255,255,0.06);
+      --serif: 'Cormorant Garamond', serif;
+      --sans: 'Jost', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── NOISE TEXTURE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(7,9,15,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      color: var(--teal);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--teal); }
+    .nav-links a span { color: var(--teal); margin-right: 0.3rem; }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 60% 40%, rgba(0,212,170,0.055) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 85% 70%, rgba(255,110,58,0.04) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at 60% 40%, black 20%, transparent 70%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 900px; }
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--teal);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 7vw, 7rem);
+      font-weight: 300;
+      line-height: 1.0;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.4s forwards;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--teal);
+    }
+    .hero-subtitle {
+      font-family: var(--serif);
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      font-weight: 300;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.6s forwards;
+    }
+    .hero-desc {
+      font-size: 1rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin-bottom: 3rem;
+      line-height: 1.9;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.8s forwards;
+    }
+    .hero-ctas {
+      display: flex; gap: 1.2rem; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s 1s forwards;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: var(--teal);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.25s;
+    }
+    .btn-primary:hover { background: #00f2c3; transform: translateY(-2px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border: 1px solid var(--teal);
+      color: var(--teal);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .btn-outline:hover { background: var(--teal-dim); transform: translateY(-2px); }
+    .hero-stats {
+      position: absolute; right: 4rem; bottom: 4rem;
+      display: flex; flex-direction: column; gap: 2rem;
+      opacity: 0;
+      animation: fadeIn 1s 1.2s forwards;
+    }
+    .stat { text-align: right; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 3rem;
+      font-weight: 300;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .scroll-indicator {
+      position: absolute; bottom: 2rem; left: 4rem;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s 1.4s forwards;
+    }
+    .scroll-line { width: 40px; height: 1px; background: var(--teal); }
+
+    /* ─── SECTION COMMON ─── */
+    section { padding: 6rem 4rem; }
+    .section-header { margin-bottom: 3.5rem; }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--teal);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+    }
+    .section-title em { font-style: italic; color: var(--teal); }
+    .section-line {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+      margin-top: 1rem;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--bg2); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .about-text p {
+      color: var(--text-dim);
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      line-height: 1.9;
+    }
+    .about-text p strong { color: var(--teal); font-weight: 500; }
+    .about-highlights { display: flex; flex-direction: column; gap: 1.2rem; }
+    .highlight-card {
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      background: rgba(0,212,170,0.03);
+      transition: transform 0.25s, background 0.25s;
+    }
+    .highlight-card:hover { transform: translateX(6px); background: rgba(0,212,170,0.06); }
+    .highlight-num {
+      font-family: var(--serif);
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: var(--teal);
+      line-height: 1;
+    }
+    .highlight-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+    .certs {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg3);
+    }
+    .certs-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--teal);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .cert-item {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--text-dim);
+    }
+    .cert-item:last-child { border-bottom: none; }
+    .cert-item::before {
+      content: '▸';
+      color: var(--teal);
+      font-size: 0.7rem;
+    }
+
+    /* ─── SKILLS ─── */
+    #skills { background: var(--bg); }
+    .skills-grid { display: flex; flex-direction: column; gap: 2rem; }
+    .skill-row { display: grid; grid-template-columns: 180px 1fr; gap: 2rem; align-items: start; padding: 1.5rem 0; border-top: 1px solid var(--border); }
+    .skill-category {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      padding-top: 0.2rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid rgba(0,212,170,0.25);
+      color: var(--text-dim);
+      background: rgba(0,212,170,0.04);
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+      cursor: default;
+    }
+    .tag:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-dim); transform: translateY(-2px); }
+    .tag.hot {
+      border-color: rgba(255,110,58,0.4);
+      background: rgba(255,110,58,0.06);
+      color: #ff9a7a;
+    }
+    .tag.hot:hover { border-color: var(--orange); color: var(--orange); background: rgba(255,110,58,0.12); }
+
+    /* ─── EXPERIENCE ─── */
+    #experience { background: var(--bg2); }
+    .exp-timeline { position: relative; padding-left: 2rem; }
+    .exp-timeline::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, var(--teal), rgba(0,212,170,0.1));
+    }
+    .exp-item {
+      position: relative;
+      margin-bottom: 3.5rem;
+      padding-left: 2rem;
+    }
+    .exp-dot {
+      position: absolute; left: -2.4rem; top: 0.35rem;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 12px rgba(0,212,170,0.5);
+    }
+    .exp-period {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--teal);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .exp-role {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 0.2rem;
+    }
+    .exp-company {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+    .exp-note {
+      font-size: 0.82rem;
+      color: var(--orange);
+      font-style: italic;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+    .exp-bullets li {
+      display: flex; gap: 0.8rem;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+    .exp-bullets li::before {
+      content: '▸';
+      color: var(--teal);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+    .exp-bullets li strong { color: var(--text); font-weight: 500; }
+
+    /* ─── PROJECTS ─── */
+    #projects { background: var(--bg); }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .project-card {
+      border: 1px solid var(--border);
+      background: var(--bg3);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--orange));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s;
+    }
+    .project-card:hover { transform: translateY(-6px); border-color: rgba(0,212,170,0.2); }
+    .project-card:hover::before { transform: scaleX(1); }
+    .project-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+    .project-name {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 0.6rem;
+    }
+    .project-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+    .project-links { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .project-link {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      text-decoration: none;
+      border: 1px solid rgba(0,212,170,0.3);
+      padding: 0.35rem 0.8rem;
+      transition: all 0.2s;
+    }
+    .project-link:hover { background: var(--teal-dim); border-color: var(--teal); }
+    .project-link.live { border-color: rgba(255,110,58,0.4); color: var(--orange); }
+    .project-link.live:hover { background: rgba(255,110,58,0.1); border-color: var(--orange); }
+
+    /* ─── CONTACT ─── */
+    #contact {
+      background: var(--bg2);
+      text-align: center;
+    }
+    .contact-inner { max-width: 620px; margin: 0 auto; }
+    .contact-pre {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--teal);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .contact-headline {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+    .contact-headline em { font-style: italic; color: var(--teal); }
+    .contact-sub {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.9;
+    }
+    .contact-cards {
+      display: flex; flex-direction: column; gap: 0.8rem;
+      margin-bottom: 2.5rem;
+    }
+    .contact-card {
+      display: flex; align-items: center; justify-content: center; gap: 1rem;
+      padding: 1rem 2rem;
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      transition: all 0.25s;
+    }
+    .contact-card:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-dim); }
+    .contact-card .label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--teal);
+      min-width: 70px;
+      text-align: right;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--text-dim);
+    }
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.1em;
+    }
+    .footer-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      section { padding: 4rem 1.5rem; }
+      #hero { padding: 0 1.5rem; }
+      .hero-stats { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .skill-row { grid-template-columns: 1fr; gap: 0.6rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero-name { font-size: 2.8rem; }
+      .exp-timeline { padding-left: 1rem; }
+      .exp-item { padding-left: 1rem; }
+      .exp-dot { left: -1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="#hero" class="nav-logo">PS</a>
+  <ul class="nav-links">
+    <li><a href="#about"><span>01.</span>About</a></li>
+    <li><a href="#skills"><span>02.</span>Skills</a></li>
+    <li><a href="#experience"><span>03.</span>Experience</a></li>
+    <li><a href="#projects"><span>04.</span>Projects</a></li>
+    <li><a href="#contact"><span>05.</span>Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">// Full Stack Developer · Melbourne, VIC</div>
+    <h1 class="hero-name">Poongo<em>thai</em><br>Senthurkumar</h1>
+    <p class="hero-subtitle">C# · .NET · AWS · React</p>
+    <p class="hero-desc">
+      15+ years of engineering experience, with the last 5 focused on cloud-native systems. I transform legacy monoliths into event-driven, serverless architectures — and make teams faster along the way.
+    </p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">Get in Touch</a>
+      <a href="#experience" class="btn-outline">View Experience</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">15+</div>
+      <div class="stat-label">Years Engineering</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5+</div>
+      <div class="stat-label">Years Cloud & .NET</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">AWS</div>
+      <div class="stat-label">Certified Developer</div>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="section-header reveal">
+    <div class="section-num">01 // About</div>
+    <h2 class="section-title">The engineer<br>behind the <em>code.</em></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>
+        I'm a <strong>Full Stack Developer with 15+ years</strong> of engineering experience, including <strong>5+ years specialising in cloud-native development</strong> with .NET Core, C#, and AWS serverless architectures.
+      </p>
+      <p>
+        My superpower is transforming complex legacy systems into modern cloud-native solutions — owning systems end-to-end from architecture through production. I've migrated monolithic ASP.NET MVC applications to scalable, event-driven architectures powered by <strong>AWS Lambda, API Gateway, and SQS</strong>, delivering measurable improvements in performance, security, and maintainability.
+      </p>
+      <p>
+        I combine software development and QA engineering expertise, ensuring high-quality delivery with a strong emphasis on automated testing, secure coding, and operational reliability. I'm equally comfortable mentoring junior engineers and driving architectural decisions.
+      </p>
+      <p>
+        Based in <strong>Melbourne, VIC</strong> — open to Remote / Hybrid / Relocation.
+      </p>
+      <div class="certs">
+        <div class="certs-label">Certifications &amp; Education</div>
+        <div class="cert-item">AWS Certified Developer – Associate &nbsp;·&nbsp; 2023–2026</div>
+        <div class="cert-item">B.E. Computer Science, Anna University &nbsp;·&nbsp; 2002–2006</div>
+      </div>
+    </div>
+    <div class="about-highlights reveal">
+      <div class="highlight-card">
+        <div class="highlight-num">~30%</div>
+        <div class="highlight-label">Lambda p95 latency reduction via cold-start optimisation</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-num">40%</div>
+        <div class="highlight-label">Claim processing time cut with AWS Lambda at Australian Unity</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-num">35%</div>
+        <div class="highlight-label">Mobile adoption uplift via HICAPS digital card APIs</div>
+      </div>
+      <div class="highlight-card">
+        <div class="highlight-num">30%</div>
+        <div class="highlight-label">System downtime reduction via proactive monitoring module</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SKILLS ─── -->
+<section id="skills">
+  <div class="section-header reveal">
+    <div class="section-num">02 // Skills</div>
+    <h2 class="section-title">Technologies I<br><em>work with.</em></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid reveal">
+    <div class="skill-row">
+      <div class="skill-category">Backend</div>
+      <div class="skill-tags">
+        <span class="tag hot">C# .NET Core</span>
+        <span class="tag hot">.NET 8</span>
+        <span class="tag">ASP.NET MVC</span>
+        <span class="tag">Entity Framework</span>
+        <span class="tag">REST APIs</span>
+        <span class="tag">Hangfire</span>
+        <span class="tag">Microservices</span>
+      </div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-category">Frontend</div>
+      <div class="skill-tags">
+        <span class="tag hot">React</span>
+        <span class="tag">Redux</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">jQuery</span>
+        <span class="tag">HTML5</span>
+        <span class="tag">CSS3</span>
+        <span class="tag">Razor Views</span>
+      </div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-category">Cloud / AWS</div>
+      <div class="skill-tags">
+        <span class="tag hot">Lambda</span>
+        <span class="tag hot">API Gateway</span>
+        <span class="tag">S3</span>
+        <span class="tag">EC2</span>
+        <span class="tag">CloudFormation</span>
+        <span class="tag">Terraform</span>
+        <span class="tag">EventBridge</span>
+        <span class="tag">SQS</span>
+        <span class="tag">Bedrock</span>
+        <span class="tag">Comprehend</span>
+        <span class="tag">SSM Parameter Store</span>
+      </div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-category">Database</div>
+      <div class="skill-tags">
+        <span class="tag">MS SQL Server</span>
+        <span class="tag">MySQL</span>
+        <span class="tag">MongoDB</span>
+        <span class="tag">Stored Procedures</span>
+        <span class="tag">Query Optimisation</span>
+      </div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-category">Testing</div>
+      <div class="skill-tags">
+        <span class="tag">NUnit</span>
+        <span class="tag">xUnit</span>
+        <span class="tag">Moq</span>
+        <span class="tag">Jest</span>
+        <span class="tag">React Testing Library</span>
+        <span class="tag">Selenium WebDriver</span>
+        <span class="tag">TestNG</span>
+        <span class="tag">Postman</span>
+        <span class="tag">TDD</span>
+      </div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-category">DevOps / CI-CD</div>
+      <div class="skill-tags">
+        <span class="tag">Jenkins</span>
+        <span class="tag">Buildkite</span>
+        <span class="tag">TeamCity</span>
+        <span class="tag">Octopus Deploy</span>
+        <span class="tag">GitHub Actions</span>
+        <span class="tag">SonarQube</span>
+        <span class="tag">Snyk</span>
+        <span class="tag">Docker</span>
+      </div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-category">Methodology</div>
+      <div class="skill-tags">
+        <span class="tag">Agile / Scrum</span>
+        <span class="tag">Kanban</span>
+        <span class="tag">TDD</span>
+        <span class="tag">Secure Coding</span>
+        <span class="tag">Code Review</span>
+        <span class="tag">Technical Mentoring</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EXPERIENCE ─── -->
+<section id="experience">
+  <div class="section-header reveal">
+    <div class="section-num">03 // Experience</div>
+    <h2 class="section-title">Where I've<br>built <em>things.</em></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="exp-timeline">
+
+    <div class="exp-item reveal">
+      <div class="exp-dot"></div>
+      <div class="exp-period">May 2025 – Feb 2026</div>
+      <div class="exp-role">Full Stack Developer</div>
+      <div class="exp-company">Optima Technology — Melbourne, VIC</div>
+      <ul class="exp-bullets">
+        <li>Resolved critical directory traversal security vulnerabilities across the SaaS platform, materially strengthening API security posture and eliminating a high-severity exposure.</li>
+        <li>Refactored client-side secret handling to server-side processing and integrated <strong>AWS SSM Parameter Store</strong>, eliminating hardcoded credentials.</li>
+        <li>Designed and implemented <strong>Lambda cold-start optimisation</strong> strategies, reducing p95 latency by ~30%.</li>
+        <li>Migrated legacy monolithic .NET 4.8 components to a scalable serverless architecture using <strong>AWS Lambda and API Gateway</strong>.</li>
+        <li>Delivered a <strong>React-based operational dashboard</strong> providing real-time system health monitoring, incident tracking, and CI metrics.</li>
+        <li>Built a push notification system for real-time SaaS platform alerts, enabling faster on-call response to bill ingestion failures.</li>
+        <li>Delivered Manual Bill Parsing with RBAC, enabling operational teams to handle exception workflows.</li>
+        <li>Authored shell scripts to enforce automated test coverage thresholds in CI/CD, blocking deployments failing quality gates.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-dot"></div>
+      <div class="exp-period">Aug 2021 – Apr 2025</div>
+      <div class="exp-role">Engineer – Full Stack Developer</div>
+      <div class="exp-company">Australian Unity Group Services — Melbourne, VIC</div>
+      <ul class="exp-bullets">
+        <li>Designed and delivered <strong>RESTful APIs for HICAPS digital card services</strong>, increasing mobile user adoption by 35%.</li>
+        <li>Architected and deployed <strong>AWS Lambda functions</strong> that reduced claim processing time by 40%, supporting high-volume daily transactions.</li>
+        <li>Developed and optimised a React <strong>"Make a Payment"</strong> self-service application, improving completion rate by 25%.</li>
+        <li>Upgraded legacy .NET services to <strong>.NET 6/8</strong>, resolving security vulnerabilities and delivering measurable performance improvements.</li>
+        <li>Implemented <strong>Swagger/OpenAPI</strong> documentation across all services, significantly reducing integration friction.</li>
+        <li>Conducted peer code reviews enforcing secure coding standards, SOLID principles, and maintainable architecture patterns.</li>
+        <li>Mentored junior developers through pairing sessions, architecture walkthroughs, and CI/CD knowledge sharing.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-dot"></div>
+      <div class="exp-period">Jan 2020 – Jul 2021</div>
+      <div class="exp-role">Test Analyst</div>
+      <div class="exp-company">e-Tools Software Pty Ltd — Melbourne, VIC</div>
+      <p class="exp-note">Deliberate pivot into QA to deepen end-to-end software quality expertise — skills now embedded into every development role.</p>
+      <ul class="exp-bullets">
+        <li>Built a <strong>data-driven Selenium WebDriver automation framework</strong> (Java/TestNG), reducing regression cycle time and enabling continuous integration via Maven and Jenkins.</li>
+        <li>Developed automated test suites covering GUI, API (Postman), functional, regression, and integration testing.</li>
+        <li>Wrote SQL queries for test data creation and validation across test environments.</li>
+        <li>Managed defect lifecycle in JIRA and TestRail with detailed reproduction steps and developer-ready bug reports.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-dot"></div>
+      <div class="exp-period">Aug 2016 – Aug 2019</div>
+      <div class="exp-role">Senior Technical Consultant</div>
+      <div class="exp-company">Perficient India Pvt Ltd — Bangalore, India</div>
+      <ul class="exp-bullets">
+        <li>Led backend development of scalable <strong>asset management APIs</strong> using .NET, processing high-volume enterprise transactions.</li>
+        <li>Designed <strong>IBM WebSphere Portal</strong> integrations using REST/SOAP, enhancing enterprise content personalisation and UX.</li>
+        <li>Built a Health &amp; Maintenance monitoring module that reduced system downtime by 30% through proactive alerting.</li>
+        <li>Implemented RBAC and security configurations within WebSphere Portal, strengthening auth workflows.</li>
+        <li>Introduced microservices architecture patterns to improve modularity, scalability, and deployment frequency.</li>
+      </ul>
+    </div>
+
+    <div class="exp-item reveal">
+      <div class="exp-dot"></div>
+      <div class="exp-period">Apr 2010 – Mar 2016</div>
+      <div class="exp-role">Software Engineering Team Lead</div>
+      <div class="exp-company">Accenture India Pvt Ltd — Bangalore, India</div>
+      <ul class="exp-bullets">
+        <li>Managed 24/7 support for <strong>40+ enterprise applications</strong>, consistently resolving 150+ monthly incidents within SLA.</li>
+        <li>Developed and maintained web applications using JSR 286, Struts, and Spring MVC at enterprise scale.</li>
+        <li>Led deployments using <strong>Jenkins</strong> and improved code quality through SonarQube integration and automated quality gates.</li>
+        <li>Managed task allocation, technical mentoring, and collaborated with clients on project scoping and estimation.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── PROJECTS ─── -->
+<section id="projects">
+  <div class="section-header reveal">
+    <div class="section-num">04 // Projects</div>
+    <h2 class="section-title">Code I've<br><em>shipped.</em></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-icon">🎓</div>
+      <div class="project-name">TeachPortal — Backend</div>
+      <p class="project-desc">
+        Full Stack School Management Application backend built with .NET. RESTful API architecture, Entity Framework data layer, clean separation of concerns, and production-ready patterns.
+      </p>
+      <div class="project-links">
+        <a href="https://github.com/nivigot/TeachPortal" target="_blank" class="project-link">GitHub ↗</a>
+      </div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-icon">⚛️</div>
+      <div class="project-name">TeachPortal — Frontend</div>
+      <p class="project-desc">
+        React-based frontend for the School Management Application. Modern component architecture, Redux state management, and a clean, responsive UI that mirrors production-level standards.
+      </p>
+      <div class="project-links">
+        <a href="https://github.com/nivigot/TeachPortalWeb" target="_blank" class="project-link">GitHub ↗</a>
+        <a href="https://teach-portal-web.vercel.app/login" target="_blank" class="project-link live">Live Demo ↗</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-pre reveal">05 // Contact</div>
+    <h2 class="contact-headline reveal">Let's build something<br><em>great together.</em></h2>
+    <p class="contact-sub reveal">
+      I'm currently open to new opportunities — full-time, contract, remote or hybrid. Whether you'd like to discuss a project or just connect, my inbox is always open.
+    </p>
+    <div class="contact-cards reveal">
+      <a href="mailto:sujapoo@gmail.com" class="contact-card">
+        <span class="label">Email</span>
+        sujapoo@gmail.com
+      </a>
+      <a href="tel:+61450258159" class="contact-card">
+        <span class="label">Phone</span>
+        0450 258 159
+      </a>
+      <a href="https://linkedin.com/in/poongothai-senthurkumar-7a4390aa" target="_blank" class="contact-card">
+        <span class="label">LinkedIn</span>
+        poongothai-senthurkumar
+      </a>
+    </div>
+    <a href="mailto:sujapoo@gmail.com" class="btn-primary reveal" style="margin: 0 auto; display: inline-flex;">Say Hello ↗</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <span class="footer-name">Poongothai Senthurkumar</span>
+  <span class="footer-copy">© 2025 — Designed &amp; Developed</span>
+  <span class="footer-tag">Melbourne, VIC · Open to Work</span>
+</footer>
+
+<script>
+  // Intersection Observer for .reveal elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Stagger child reveals within groups
+  document.querySelectorAll('.skills-grid, .projects-grid').forEach(group => {
+    group.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = `${i * 0.08}s`;
+    });
+  });
+
+  // Nav shrink on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.padding = window.scrollY > 60 ? '0.8rem 4rem' : '1.2rem 4rem';
+  });
+</script>
+</body>
+</html>
