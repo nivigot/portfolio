@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -19,9 +19,24 @@
       --text: #dde2f0;
       --text-dim: #8892a4;
       --border: rgba(255,255,255,0.06);
+      --nav-bg: rgba(7,9,15,0.85);
       --serif: 'Cormorant Garamond', serif;
       --sans: 'Jost', sans-serif;
       --mono: 'JetBrains Mono', monospace;
+    }
+
+    /* ─── LIGHT THEME ─── */
+    html.light {
+      --bg: #f4f6f9;
+      --bg2: #eaecf2;
+      --bg3: #ffffff;
+      --teal: #009e7f;
+      --teal-dim: rgba(0,158,127,0.1);
+      --orange: #e05a20;
+      --text: #1a1e2e;
+      --text-dim: #555e72;
+      --border: rgba(0,0,0,0.08);
+      --nav-bg: rgba(244,246,249,0.9);
     }
 
     html { scroll-behavior: smooth; }
@@ -32,6 +47,7 @@
       color: var(--text);
       line-height: 1.7;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
 
     /* ─── NOISE TEXTURE OVERLAY ─── */
@@ -55,7 +71,7 @@
       z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.2rem 4rem;
-      background: rgba(7,9,15,0.85);
+      background: var(--nav-bg);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
       transition: padding 0.3s;
@@ -79,6 +95,27 @@
     }
     .nav-links a:hover { color: var(--teal); }
     .nav-links a span { color: var(--teal); margin-right: 0.3rem; }
+
+    /* ─── THEME TOGGLE ─── */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      cursor: pointer;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.25s;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: var(--teal-dim);
+    }
+    .theme-toggle svg { width: 16px; height: 16px; transition: transform 0.4s; }
+    .theme-toggle:hover svg { transform: rotate(20deg); }
+    html.light .theme-toggle { color: var(--text-dim); }
 
     /* ─── HERO ─── */
     #hero {
@@ -238,9 +275,10 @@
     #about { background: var(--bg2); }
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
+      grid-template-columns: 1fr;
+      gap: 2rem;
       align-items: start;
+      max-width: 780px;
     }
     .about-text p {
       color: var(--text-dim);
@@ -582,6 +620,20 @@
     <li><a href="#projects"><span>04.</span>Projects</a></li>
     <li><a href="#contact"><span>05.</span>Contact</a></li>
   </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <!-- moon icon (shown in dark mode) -->
+    <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+    <!-- sun icon (shown in light mode) -->
+    <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+  </button>
 </nav>
 
 <!-- ─── HERO ─── -->
@@ -647,24 +699,7 @@
         <div class="cert-item">B.E. Computer Science, Anna University &nbsp;·&nbsp; 2002–2006</div>
       </div>
     </div>
-    <div class="about-highlights reveal">
-      <div class="highlight-card">
-        <div class="highlight-num">~30%</div>
-        <div class="highlight-label">Lambda p95 latency reduction via cold-start optimisation</div>
-      </div>
-      <div class="highlight-card">
-        <div class="highlight-num">40%</div>
-        <div class="highlight-label">Claim processing time cut with AWS Lambda at Australian Unity</div>
-      </div>
-      <div class="highlight-card">
-        <div class="highlight-num">35%</div>
-        <div class="highlight-label">Mobile adoption uplift via HICAPS digital card APIs</div>
-      </div>
-      <div class="highlight-card">
-        <div class="highlight-num">30%</div>
-        <div class="highlight-label">System downtime reduction via proactive monitoring module</div>
-      </div>
-    </div>
+
   </div>
 </section>
 
@@ -679,8 +714,8 @@
     <div class="skill-row">
       <div class="skill-category">Backend</div>
       <div class="skill-tags">
-        <span class="tag hot">C# .NET Core</span>
-        <span class="tag hot">.NET 8</span>
+        <span class="tag">C# .NET Core</span>
+        <span class="tag">.NET 8</span>
         <span class="tag">ASP.NET MVC</span>
         <span class="tag">Entity Framework</span>
         <span class="tag">REST APIs</span>
@@ -691,7 +726,7 @@
     <div class="skill-row">
       <div class="skill-category">Frontend</div>
       <div class="skill-tags">
-        <span class="tag hot">React</span>
+        <span class="tag">React</span>
         <span class="tag">Redux</span>
         <span class="tag">TypeScript</span>
         <span class="tag">JavaScript</span>
@@ -704,8 +739,8 @@
     <div class="skill-row">
       <div class="skill-category">Cloud / AWS</div>
       <div class="skill-tags">
-        <span class="tag hot">Lambda</span>
-        <span class="tag hot">API Gateway</span>
+        <span class="tag">Lambda</span>
+        <span class="tag">API Gateway</span>
         <span class="tag">S3</span>
         <span class="tag">EC2</span>
         <span class="tag">CloudFormation</span>
@@ -921,6 +956,31 @@
 </footer>
 
 <script>
+  // Theme toggle
+  const toggle = document.getElementById('themeToggle');
+  const moon = document.getElementById('iconMoon');
+  const sun = document.getElementById('iconSun');
+  const html = document.documentElement;
+
+  // Restore saved preference (default: light)
+  if (localStorage.getItem('theme') === 'dark') {
+    html.classList.remove('light');
+    moon.style.display = 'block';
+    sun.style.display = 'none';
+  } else {
+    html.classList.add('light');
+    moon.style.display = 'none';
+    sun.style.display = 'block';
+  }
+
+  toggle.addEventListener('click', () => {
+    html.classList.toggle('light');
+    const isLight = html.classList.contains('light');
+    moon.style.display = isLight ? 'none' : 'block';
+    sun.style.display = isLight ? 'block' : 'none';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+
   // Intersection Observer for .reveal elements
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
